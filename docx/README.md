@@ -1,0 +1,1 @@
+# Đây là thư mục chứa dữ liệu file docx
