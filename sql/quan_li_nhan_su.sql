@@ -1,8 +1,9 @@
-﻿USE TenDatabase;
+USE TenDatabase;
 GO
 
 -- 0. XOA BANG CU 
 
+DROP TABLE IF EXISTS dbo.CHI_NHANH;
 DROP TABLE IF EXISTS dbo.CHI_TIET_HOA_HONG;
 DROP TABLE IF EXISTS dbo.BANG_LUONG_THANG;
 DROP TABLE IF EXISTS dbo.HOA_HONG_PT;
@@ -12,7 +13,27 @@ DROP TABLE IF EXISTS dbo.NHAN_VIEN;
 GO
 
 
--- 1. NHAN_VIEN
+-- 1. CHI_NHANH
+-- Luu thong tin cac chi nhanh cua phong gym.
+
+CREATE TABLE dbo.CHI_NHANH (
+    MaCN         VARCHAR(10)   NOT NULL,
+    TenCN        NVARCHAR(100) NOT NULL,
+    DiaChi       NVARCHAR(255) NOT NULL,
+    SDT          VARCHAR(15)   NOT NULL,
+    GioMoCua     TIME          NOT NULL,
+    GioDongCua   TIME          NOT NULL,
+
+    CONSTRAINT PK_CHI_NHANH
+        PRIMARY KEY (MaCN),
+
+    CONSTRAINT UQ_CHI_NHANH_SDT
+        UNIQUE (SDT)
+);
+GO
+
+
+-- 2. NHAN_VIEN
 -- Ho so nhan vien hien tai.
 
 CREATE TABLE dbo.NHAN_VIEN (
@@ -52,7 +73,7 @@ CREATE INDEX IX_NHAN_VIEN_CHUCVU ON dbo.NHAN_VIEN (ChucVu);
 GO
 
 
--- 2. LICH_SU_CONG_TAC
+-- 3. LICH_SU_CONG_TAC
 -- Theo doi cac giai doan cong tac / dieu chuyen cua nhan vien.
 -- PK: (MaNV, NgayBatDau)
 -- NgayKetThuc = NULL: giai doan hien tai.
@@ -98,7 +119,7 @@ CREATE UNIQUE INDEX UQ_LSCT_MOT_GIAI_DOAN_MO
 GO
 
 
--- 3. LICH_SU_LUONG
+-- 4. LICH_SU_LUONG
 -- Luu lich su thay doi luong co ban, khong ghi de lich su cu.
 -- PK: (MaNV, NgayHieuLuc)
 
@@ -126,7 +147,7 @@ CREATE INDEX IX_LSL_THOIGIAN ON dbo.LICH_SU_LUONG (MaNV, NgayHieuLuc, NgayHetHie
 GO
 
 
--- 4. HOA_HONG_PT
+-- 5. HOA_HONG_PT
 -- Luu cac phien ban chinh sach hoa hong PT.
 
 CREATE TABLE dbo.HOA_HONG_PT (
@@ -150,7 +171,7 @@ CREATE INDEX IX_HHPT_NGAYHIEULUC ON dbo.HOA_HONG_PT (NgayHieuLuc, NgayHetHieuLuc
 GO
 
 
--- 5. BANG_LUONG_THANG
+-- 6. BANG_LUONG_THANG
 -- Moi nhan vien co toi da mot bang luong trong mot thang/nam.
 -- TongThucLanh = LuongCoBan + TongHoaHong.
 
@@ -192,7 +213,7 @@ CREATE INDEX IX_BLT_NAM_THANG ON dbo.BANG_LUONG_THANG (Nam, Thang);
 GO
 
 
--- 6. CHI_TIET_HOA_HONG
+-- 7. CHI_TIET_HOA_HONG
 -- Tong hop hoa hong theo nhan vien, thang, nam, chi nhanh
 -- va chinh sach ap dung.
 --
